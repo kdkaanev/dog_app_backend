@@ -15,4 +15,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'user', 'dog_post', 'content', 'created_at']
         read_only_fields = ['user', 'dog_post', 'created_at']  # Prevent these fields from being editable
-
+class DogUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DogUser
+        fields = ['id', 'phone_number', 'full_name',]

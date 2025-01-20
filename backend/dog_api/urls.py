@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import DogPostViewSet, SignupView, LoginView, sign_out, AdoptionView, CommentViewSet
+from .views import DogPostViewSet, SignupView, LoginView, sign_out, AdoptionView, CommentViewSet, CurrentUserView
 
 router = DefaultRouter()
 router.register(r'dogs', DogPostViewSet)
@@ -13,4 +13,5 @@ urlpatterns = (
     path('auth/login/', LoginView.as_view(), name='login'),
     path('auth/logout/', sign_out, name='logout'),
     path('adoption/', AdoptionView.as_view(), name='adoption'),
+    path('auth/me/', CurrentUserView.as_view(), name='current-user'),
 )

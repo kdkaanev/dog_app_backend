@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-jl6-e6rez5b7()qpc&qt(g=9drtz*t_1i6f@$1mzh37o=c^h8&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','localhost']
 
 # Application definition
 
@@ -36,16 +36,18 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
 
     'backend.dog_api',
     "corsheaders",
 )
 
 MIDDLEWARE = [
-"corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
 
+    "django.middleware.csrf.CsrfViewMiddleware",
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -56,11 +58,22 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",# Allow Vue app to access Django API
 ]
-
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173"
+    "http://127.0.0.1:5173",
+]
+SESSION_COOKIE_SAMESITE = "Lax"  # Or "None" for cross-site
+SESSION_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_HTTPONLY = False  # Ensure frontend can access the CSRF token
+CSRF_USE_SESSIONS = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',

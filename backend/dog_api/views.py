@@ -21,7 +21,8 @@ from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login
-
+from .serializers import DogUserSerializer
+from rest_framework.authtoken.models import Token
 
 class DogPostViewSet(ModelViewSet):
     permission_classes = [AllowAny]
@@ -65,6 +66,7 @@ class LoginView(APIView):
 
         # Log in user
         login(request, user)
+        token, _ = Token.objects.get_or_create(user=user)
 
         csrf_token = get_token(request)
 
@@ -73,7 +75,7 @@ class LoginView(APIView):
 
 
         # Prepare DogUser data
-        dog_user_data = None
+        dog_user_data = DogUserSerializer(dog_user).data if dog_user else None
         if dog_user:
             dog_user_data = {
                 "id": dog_user.id,
@@ -84,23 +86,46 @@ class LoginView(APIView):
 
         # Return response
         response = Response({
-            "id": user.id,
-            "message": "Login successful",
-            "username": username,
-            "email": user.email,
-            "dog_user": dog_user_data,
-        }, status=status.HTTP_200_OK)
+                "id": user.id,
+                "username": username,
+                "dog_user": dog_user_data,
+                "message": "Login successful"
+            }, status=status.HTTP_200_OK)
+
+
 
         # Set CSRF token as a cookie
         response.set_cookie(
             key="csrftoken",
             value=csrf_token,
             httponly=False,  # Allow frontend to access it
-            secure=True,  # Set to False in local dev (use True for HTTPS)
+            secure=False,  # Set to False in local dev (use True for HTTPS)
             samesite="Lax"
         )
 
+
+
+
         return response
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        user = request.user
+        dog_user = getattr(user, 'dog_user', None)
+        dog_user_data = DogUserSerializer(dog_user).data if dog_user else None
+
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "dog_user": dog_user_data,
+        })
+
 
 def sign_out(request):
     logout(request)
