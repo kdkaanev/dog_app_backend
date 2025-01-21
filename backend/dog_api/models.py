@@ -1,8 +1,5 @@
-
-
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils import timezone
 
 User = get_user_model()
 
@@ -43,9 +40,7 @@ class DogUser(models.Model):
         return self.first_name[0] or self.last_name[0]
 
 
-
 class DogPost(models.Model):
-
     title = models.CharField(
         null=True,
         blank=True,
@@ -84,6 +79,7 @@ class DogPost(models.Model):
     def __str__(self):
         return f"{self.title.capitalize()}"
 
+
 class AdoptionApplication(models.Model):
     title = models.CharField(max_length=100, default="")
     user = models.ForeignKey(
@@ -103,10 +99,9 @@ class AdoptionApplication(models.Model):
     )
     message = models.TextField()
 
-
-
     def __str__(self):
         return self.title
+
 
 class Comment(models.Model):
     content = models.TextField()

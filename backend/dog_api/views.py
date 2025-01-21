@@ -2,24 +2,21 @@ import token
 
 # Create your views here.
 from rest_framework.viewsets import ModelViewSet
-from .models import DogPost, Comment
+from .models import Comment
 from .serializers import DogPostSerializer, CommentSerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 from django.contrib.auth.models import User
 
-from django.contrib.auth import login, logout, authenticate
-
 from rest_framework.permissions import IsAuthenticated
 from .models import DogPost
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from rest_framework.permissions import AllowAny
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .serializers import DogUserSerializer
 from rest_framework.authtoken.models import Token
 
@@ -38,7 +35,8 @@ class DogPostViewSet(ModelViewSet):
 class SignupView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get("email")
@@ -50,7 +48,8 @@ class SignupView(APIView):
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         username = request.data.get("username")
         password = request.data.get("password")
 
@@ -92,7 +91,8 @@ class LoginView(APIView):
             key="csrftoken",
             value=csrf_token,
             httponly=False,  # Allow frontend to access it
-            secure=False,  # Set to False in local dev (use True for HTTPS)
+            secure=False,  # TODO Set to False in local dev (use True for HTTPS)
+
             samesite="Lax"
         )
 
@@ -102,7 +102,8 @@ class LoginView(APIView):
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         if not request.user.is_authenticated:
             return Response({"detail": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -127,7 +128,8 @@ class LogoutView(APIView):
     def delete(self, request):
         return self.perform_logout(request)
 
-    def perform_logout(self, request):
+    @staticmethod
+    def perform_logout(request):
         logout(request)
         response = Response({"message": "Logged out successfully."}, status=200)
         response.delete_cookie("sessionid", path="/", domain=None)
@@ -138,7 +140,8 @@ class LogoutView(APIView):
 class AdoptionView(APIView):
     permission_classes = [AllowAny]  # Only authenticated users can adopt
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         dog_post_id = request.data.get("dog_post_id")  # ID of the dog post the user wants to adopt
 
         if not dog_post_id:
