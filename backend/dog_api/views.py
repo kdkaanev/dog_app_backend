@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth import login, logout, authenticate
 
-
 from rest_framework.permissions import IsAuthenticated
 from .models import DogPost
 from rest_framework.response import Response
@@ -23,6 +22,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login
 from .serializers import DogUserSerializer
 from rest_framework.authtoken.models import Token
+
 
 class DogPostViewSet(ModelViewSet):
     permission_classes = [AllowAny]
@@ -45,9 +45,6 @@ class SignupView(APIView):
 
         User.objects.create_user(username=username, password=password, email=email)
         return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
-
-
-
 
 
 class LoginView(APIView):
@@ -73,7 +70,6 @@ class LoginView(APIView):
         # Get related DogUser instance (if exists)
         dog_user = getattr(user, 'dog_user', None)
 
-
         # Prepare DogUser data
         dog_user_data = DogUserSerializer(dog_user).data if dog_user else None
         if dog_user:
@@ -83,16 +79,13 @@ class LoginView(APIView):
 
             }
 
-
         # Return response
         response = Response({
-                "id": user.id,
-                "username": username,
-                "dog_user": dog_user_data,
-                "message": "Login successful"
-            }, status=status.HTTP_200_OK)
-
-
+            "id": user.id,
+            "username": username,
+            "dog_user": dog_user_data,
+            "message": "Login successful"
+        }, status=status.HTTP_200_OK)
 
         # Set CSRF token as a cookie
         response.set_cookie(
@@ -103,10 +96,8 @@ class LoginView(APIView):
             samesite="Lax"
         )
 
-
-
-
         return response
+
 
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -127,8 +118,21 @@ class CurrentUserView(APIView):
         })
 
 
-def sign_out(request):
-    logout(request)
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return self.perform_logout(request)
+
+    def delete(self, request):
+        return self.perform_logout(request)
+
+    def perform_logout(self, request):
+        logout(request)
+        response = Response({"message": "Logged out successfully."}, status=200)
+        response.delete_cookie("sessionid", path="/", domain=None)
+        response.delete_cookie("csrftoken", path="/", domain=None)
+        return response
 
 
 class AdoptionView(APIView):
