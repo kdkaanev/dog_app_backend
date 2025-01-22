@@ -10,7 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
 
 from rest_framework.permissions import IsAuthenticated
-from .models import DogPost
+from .models import DogPost, DogUser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -35,8 +35,8 @@ class DogPostViewSet(ModelViewSet):
 class SignupView(APIView):
     permission_classes = [AllowAny]
 
-    @staticmethod
-    def post(request):
+
+    def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get("email")
@@ -117,6 +117,45 @@ class CurrentUserView(APIView):
             "email": user.email,
             "dog_user": dog_user_data,
         })
+
+    def patch(self, request):
+        # Extract and validate data
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        phone_number = request.data.get('phone_number')
+
+        if not any([first_name, last_name, phone_number]):
+            return Response(
+                {"error": "No fields provided to update."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Update user profile
+        try:
+            user_profile = request.user.dog_user  # Assuming DogUser is related to the user
+            if first_name:
+                user_profile.first_name = first_name
+            if last_name:
+                user_profile.last_name = last_name
+            if phone_number:
+                user_profile.phone_number = phone_number
+            user_profile.save()
+
+            return Response(
+                {"message": "Profile updated successfully!"},
+                status=status.HTTP_200_OK,
+            )
+        except AttributeError:
+            return Response(
+                {"error": "User profile does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
 
 
 class LogoutView(APIView):

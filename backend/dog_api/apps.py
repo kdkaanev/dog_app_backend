@@ -8,4 +8,4 @@ class DogApiConfig(AppConfig):
 
 
     def ready(self):
-        pass
+        import backend.dog_api.signals
