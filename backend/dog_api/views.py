@@ -1,6 +1,7 @@
 import token
 
 # Create your views here.
+
 from rest_framework.viewsets import ModelViewSet
 from .models import Comment
 from .serializers import DogPostSerializer, CommentSerializer
@@ -30,6 +31,18 @@ class DogPostViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+
+class UserPostsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        posts = DogPost.objects.filter(user=user)  # Filter posts by the logged-in user
+        serializer = DogPostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class SignupView(APIView):

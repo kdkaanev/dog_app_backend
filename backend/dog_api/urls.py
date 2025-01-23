@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import DogPostViewSet, SignupView, LoginView, LogoutView, AdoptionView, CommentViewSet, CurrentUserView
+from .views import DogPostViewSet, SignupView, LoginView, LogoutView, AdoptionView, CommentViewSet, CurrentUserView, UserPostsView
 router = DefaultRouter()
 router.register(r'dogs', DogPostViewSet)
 router.register(r'comments', CommentViewSet, basename='comment')
@@ -13,4 +13,5 @@ urlpatterns = (
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('adoption/', AdoptionView.as_view(), name='adoption'),
     path('auth/me/', CurrentUserView.as_view(), name='current-user'),
+    path('posts/user/', UserPostsView.as_view(), name='user-posts')
 )
