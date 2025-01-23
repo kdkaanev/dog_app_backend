@@ -22,4 +22,4 @@ class CommentSerializer(serializers.ModelSerializer):
 class DogUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = DogUser
-        fields = ['id', 'phone_number', 'full_name', ]
+        fields = ['id', 'phone_number','first_name', 'last_name','full_name', ]
