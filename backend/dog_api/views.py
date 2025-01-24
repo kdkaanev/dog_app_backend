@@ -155,7 +155,10 @@ class CurrentUserView(APIView):
             user_profile.save()
 
             return Response(
-                {"message": "Profile updated successfully!"},
+                {
+                    "username": request.user.username,
+                    "message": "Profile updated successfully!"
+                },
                 status=status.HTTP_200_OK,
             )
         except AttributeError:
