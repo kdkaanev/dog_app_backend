@@ -23,15 +23,20 @@ from rest_framework.authtoken.models import Token
 
 
 class DogPostViewSet(ModelViewSet):
-    permission_classes = [AllowAny]
     queryset = DogPost.objects.all().order_by('-date_posted')
     serializer_class = DogPostSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_field = ['type', 'breed', 'last_seen_location']
 
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:  # Viewing posts
+            return [AllowAny()]
+        elif self.action in ['create', 'update', 'partial_update', 'destroy']:  # Creating, editing, or deleting posts
+            return [IsAuthenticated()]
+        return super().get_permissions()
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
 
 
 class UserPostsView(APIView):
@@ -44,10 +49,8 @@ class UserPostsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
 class SignupView(APIView):
     permission_classes = [AllowAny]
-
 
     def post(self, request):
         username = request.data.get("username")
@@ -171,7 +174,6 @@ class CurrentUserView(APIView):
                 {"error": f"An error occurred: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
 
 
 class LogoutView(APIView):
