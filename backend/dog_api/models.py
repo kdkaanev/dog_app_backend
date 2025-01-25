@@ -19,6 +19,11 @@ class DogUser(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=9)
+    location = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+    )
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,

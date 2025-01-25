@@ -139,8 +139,9 @@ class CurrentUserView(APIView):
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
         phone_number = request.data.get('phone_number')
+        location = request.data.get('location')
 
-        if not any([first_name, last_name, phone_number]):
+        if not any([first_name, last_name, phone_number, location]):
             return Response(
                 {"error": "No fields provided to update."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -155,6 +156,8 @@ class CurrentUserView(APIView):
                 user_profile.last_name = last_name
             if phone_number:
                 user_profile.phone_number = phone_number
+            if location:
+                user_profile.location = location
             user_profile.save()
 
             return Response(
