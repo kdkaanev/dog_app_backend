@@ -6,6 +6,7 @@ class DogPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = DogPost
         fields = '__all__'
+        read_only_fields = ('id','date_posted','user')
 
 
 from rest_framework import serializers
