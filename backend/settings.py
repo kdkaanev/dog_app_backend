@@ -26,8 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DEBUG", 0))
-#DEBUG = True
+#DEBUG = bool(os.getenv("DEBUG", 0))
+DEBUG = True
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
@@ -119,8 +119,8 @@ DATABASES = {
 }
 
 '''
-
-DATABASES = {
+if DEBUG:
+    DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "dog_db1",
@@ -130,8 +130,8 @@ DATABASES = {
         "PORT": "5432",
     }
 }
-'''
-DATABASES = {
+else:
+    DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB'),
@@ -141,7 +141,7 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
-'''
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
