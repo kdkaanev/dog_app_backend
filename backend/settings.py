@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
+from dotenv import load_dotenv
 from pathlib import Path
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-jl6-e6rez5b7()qpc&qt(g=9drtz*t_1i6f@$1mzh37o=c^h8&'
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = bool(os.getenv("DEBUG", 0))
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+
 
 # Application definition
 
@@ -45,6 +50,7 @@ INSTALLED_APPS = (
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.middleware.csrf.CsrfViewMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -56,7 +62,7 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",# Allow Vue app to access Django API
+    "http://127.0.0.1:5173",  # Allow Vue app to access Django API
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
@@ -71,7 +77,7 @@ CSRF_USE_SESSIONS = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
 
     ],
@@ -112,9 +118,9 @@ DATABASES = {
     }
 }
 
-
 '''
-DATABASES = {
+'''
+ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "dog_db1",
@@ -122,6 +128,19 @@ DATABASES = {
         "PASSWORD": "postgres",
         "HOST": "127.0.0.1",
         "PORT": "5432",
+    }
+}
+'''
+
+DATABASES = {
+    "default": {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 
@@ -158,6 +177,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
