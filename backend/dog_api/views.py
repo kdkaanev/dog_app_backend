@@ -3,8 +3,8 @@ import token
 # Create your views here.
 
 from rest_framework.viewsets import ModelViewSet
-from .models import Comment
-from .serializers import DogPostSerializer, CommentSerializer
+from .models import Comment, Message
+from .serializers import DogPostSerializer, CommentSerializer, MessageSerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from .models import DogPost, DogUser
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.views import APIView
 from django.middleware.csrf import get_token
 from rest_framework.permissions import AllowAny
@@ -236,3 +236,21 @@ class CommentViewSet(ModelViewSet):
         # Automatically assign the logged-in user and the related dog post
         dog_post = DogPost.objects.get(id=self.request.data['dog_post'])
         serializer.save(user=self.request.user, dog_post=dog_post)
+
+class MessageViewSet(ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        recipient_id = self.request.data['recipient']
+        dog_id = self.request.data['dog']
+
+        try:
+            recipient = DogUser.objects.get(id=recipient_id)
+            dog = DogPost.objects.get(id=dog_id)
+        except DogPost.DoesNotExist:
+            raise serializers.ValidationError("Dog post not found")
+        except DogUser.DoesNotExist:
+            raise serializers.ValidationError("User not found")
+        serializer.save(sender=self.request.user, recipient=recipient, dog=dog)

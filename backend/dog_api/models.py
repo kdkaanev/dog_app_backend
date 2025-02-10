@@ -80,7 +80,9 @@ class DogPost(models.Model):
         on_delete=models.CASCADE,
         related_name='dog_posts',
     )
-
+    @property
+    def dog_post(self):
+        return DogPost.objects.get(pk=self.pk).user
     def __str__(self):
         return f"{self.title.capitalize()}"
 
@@ -125,3 +127,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.user.full_name} on {self.dog_post.title}"
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+    recipient = models.ForeignKey(
+        DogUser, on_delete=models.CASCADE,
+        related_name='received_messages'
+    )
+    dog = models.ForeignKey(
+        DogPost, on_delete=models.CASCADE
+    )
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
