@@ -29,7 +29,13 @@ class DogUserSerializer(serializers.ModelSerializer):
         model = DogUser
         fields = ['id', 'first_name', 'last_name', 'phone_number', 'location', 'user', 'full_name', 'received_messages']
 
+class LightDogUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DogUser
+        fields = ['id', 'first_name','full_name']
+
 class MessageSerializer(serializers.ModelSerializer):
+    sender = LightDogUserSerializer(read_only=True)
     class Meta:
         model = Message
         fields = ['id','message','sender','recipient', 'dog', 'created_at']

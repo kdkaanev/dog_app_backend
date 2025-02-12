@@ -1,5 +1,6 @@
 import token
 
+from django.template.context_processors import request
 # Create your views here.
 
 from rest_framework.viewsets import ModelViewSet
@@ -245,12 +246,14 @@ class MessageViewSet(ModelViewSet):
     def perform_create(self, serializer):
         recipient_id = self.request.data['recipient']
         dog_id = self.request.data['dog']
+        sender_id = self.request.data['sender']
 
         try:
             recipient = DogUser.objects.get(id=recipient_id)
             dog = DogPost.objects.get(id=dog_id)
+            sender = DogUser.objects.get(id=sender_id)
         except DogPost.DoesNotExist:
             raise serializers.ValidationError("Dog post not found")
         except DogUser.DoesNotExist:
             raise serializers.ValidationError("User not found")
-        serializer.save(sender=self.request.user, recipient=recipient, dog=dog)
+        serializer.save(sender=sender , recipient=recipient, dog=dog)

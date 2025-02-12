@@ -131,7 +131,7 @@ class Comment(models.Model):
 
 class Message(models.Model):
     sender = models.ForeignKey(
-        User,
+        DogUser,
         on_delete=models.CASCADE
     )
     recipient = models.ForeignKey(
