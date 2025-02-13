@@ -66,12 +66,14 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",  # Allow Vue app to access Django API
+    "http://127.0.0.1:5173",
+    "https://thankful-rock-0d02ca603.4.azurestaticapps.net"# Allow Vue app to access Django API
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://thankful-rock-0d02ca603.4.azurestaticapps.net"
 ]
 '''
 SESSION_COOKIE_SAMESITE = "Lax"  # Or "None" for cross-site
