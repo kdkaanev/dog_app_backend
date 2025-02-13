@@ -83,9 +83,7 @@ CSRF_USE_SESSIONS = False
 SESSION_COOKIE_SAMESITE = "None"  # Or "None" for cross-site
 SESSION_COOKIE_SECURE = True  # Set to True in production
 CSRF_COOKIE_SECURE = True  # Set to True in production
-CSRF_COOKIE_HTTPONLY = False  # Ensure frontend can access the CSRF token
-CSRF_USE_SESSIONS = False
-CSRF_COOKIE_SECURE = True
+
 
 
 REST_FRAMEWORK = {

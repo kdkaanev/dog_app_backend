@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import DogPostViewSet, SignupView, LoginView, LogoutView, AdoptionView, CommentViewSet, CurrentUserView, \
-    UserPostsView, MessageViewSet
+    UserPostsView, MessageViewSet, get_csrf_token
 
 router = DefaultRouter()
 router.register(r'dogs', DogPostViewSet, basename='dog')
@@ -11,6 +11,7 @@ router.register(r'message', MessageViewSet, basename='user')
 
 urlpatterns = (
     path('', include(router.urls)),
+    path("csrf/", get_csrf_token, name="csrf"),
     path('api/', include(router.urls)),
     path('auth/signup/', SignupView.as_view(), name='signup'),
     path('auth/login/', LoginView.as_view(), name='login'),

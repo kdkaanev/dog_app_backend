@@ -23,6 +23,12 @@ from .serializers import DogUserSerializer
 from rest_framework.authtoken.models import Token
 
 
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
+
+def get_csrf_token(request):
+    return JsonResponse({"csrfToken": get_token(request)})
+
 class DogPostViewSet(ModelViewSet):
     queryset = DogPost.objects.all().order_by('-date_posted')
     serializer_class = DogPostSerializer
