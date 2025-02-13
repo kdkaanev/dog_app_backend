@@ -68,7 +68,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",  # Allow Vue app to access Django API
 ]
-CORS_ALLOW_CREDENTIALS = True
+
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -80,10 +80,11 @@ CSRF_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_HTTPONLY = False  # Ensure frontend can access the CSRF token
 CSRF_USE_SESSIONS = False
 '''
-SESSION_COOKIE_SAMESITE = "None"  # Or "None" for cross-site
-SESSION_COOKIE_SECURE = True  # Set to True in production
-CSRF_COOKIE_SECURE = True  # Set to True in production
-
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True  # Required for HTTPS
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+CORS_ALLOW_CREDENTIALS = True  # Ensure cookies are sent
 
 
 REST_FRAMEWORK = {
