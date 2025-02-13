@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+
+from django.conf.global_settings import SESSION_COOKIE_SAMESITE
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -71,11 +73,20 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+'''
 SESSION_COOKIE_SAMESITE = "Lax"  # Or "None" for cross-site
 SESSION_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_HTTPONLY = False  # Ensure frontend can access the CSRF token
 CSRF_USE_SESSIONS = False
+'''
+SESSION_COOKIE_SAMESITE = "None"  # Or "None" for cross-site
+SESSION_COOKIE_SECURE = True  # Set to True in production
+CSRF_COOKIE_SECURE = True  # Set to True in production
+CSRF_COOKIE_HTTPONLY = False  # Ensure frontend can access the CSRF token
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_SECURE = True
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
