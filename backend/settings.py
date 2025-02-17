@@ -133,7 +133,7 @@ DATABASES = {
 }
 
 '''
-if not DEBUG:
+if  DEBUG:
 
     DATABASES = {
         "default": {
