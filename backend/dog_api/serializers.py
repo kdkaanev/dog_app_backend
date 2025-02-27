@@ -5,6 +5,7 @@ from .models import DogPost, DogUser, Message,Comment
 
 class DogPostSerializer(serializers.ModelSerializer):
     dog_user_id = serializers.SerializerMethodField()
+    dog_user_name = serializers.SerializerMethodField()
     class Meta:
         model = DogPost
         fields = ['id', 'title', 'breed', 'photo_url', 'description', 'last_seen_location', 'date_posted', 'status', 'user', 'dog_user_id']
@@ -12,6 +13,9 @@ class DogPostSerializer(serializers.ModelSerializer):
     def get_dog_user_id(self, obj):
         dog_user = DogUser.objects.filter(user=obj.user).first()
         return dog_user.id if dog_user else None
+     def get_dog_user_name(self, obj):
+        dog_user = DogUser.objects.filter(user=obj.user).first()
+        return dog_user.first_name if dog_user else None
 
 
 
