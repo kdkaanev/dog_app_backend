@@ -83,6 +83,12 @@ class DogPost(models.Model):
     @property
     def dog_post(self):
         return DogPost.objects.get(pk=self.pk).user
+
+    @property
+    def has_messages(self):
+        return self.message_set.exists()
+
+
     def __str__(self):
         return f"{self.title.capitalize()}"
 
