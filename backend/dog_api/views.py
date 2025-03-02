@@ -1,8 +1,3 @@
-import token
-
-from django.template.context_processors import request
-# Create your views here.
-
 from rest_framework.viewsets import ModelViewSet
 from .models import Comment, Message
 from .serializers import DogPostSerializer, CommentSerializer, MessageSerializer
@@ -16,18 +11,18 @@ from .models import DogPost, DogUser
 from rest_framework.response import Response
 from rest_framework import status, serializers
 from rest_framework.views import APIView
-from django.middleware.csrf import get_token
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login, logout
 from .serializers import DogUserSerializer
 from rest_framework.authtoken.models import Token
 
-
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 
+
 def get_csrf_token(request):
     return JsonResponse({"csrfToken": get_token(request)})
+
 
 class DogPostViewSet(ModelViewSet):
     queryset = DogPost.objects.all().order_by('-date_posted')
@@ -49,7 +44,8 @@ class DogPostViewSet(ModelViewSet):
 class UserPostsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         user = request.user
         posts = DogPost.objects.filter(user=user)  # Filter posts by the logged-in user
         serializer = DogPostSerializer(posts, many=True)
@@ -59,7 +55,8 @@ class UserPostsView(APIView):
 class SignupView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get("email")
@@ -141,7 +138,8 @@ class CurrentUserView(APIView):
             "dog_user": dog_user_data,
         })
 
-    def patch(self, request):
+    @staticmethod
+    def patch(request):
         # Extract and validate data
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
@@ -244,6 +242,7 @@ class CommentViewSet(ModelViewSet):
         dog_post = DogPost.objects.get(id=self.request.data['dog_post'])
         serializer.save(user=self.request.user, dog_post=dog_post)
 
+
 class MessageViewSet(ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
@@ -262,4 +261,4 @@ class MessageViewSet(ModelViewSet):
             raise serializers.ValidationError("Dog post not found")
         except DogUser.DoesNotExist:
             raise serializers.ValidationError("User not found")
-        serializer.save(sender=sender , recipient=recipient, dog=dog)
+        serializer.save(sender=sender, recipient=recipient, dog=dog)

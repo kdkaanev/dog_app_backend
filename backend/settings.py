@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # DEBUG = bool(os.getenv("DEBUG", 0))
 DEBUG = False
 
-#ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -67,7 +67,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://thankful-rock-0d02ca603.4.azurestaticapps.net"# Allow Vue app to access Django API
+    "https://thankful-rock-0d02ca603.4.azurestaticapps.net"  # Allow Vue app to access Django API
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -87,7 +87,6 @@ CSRF_COOKIE_SECURE = True  # Required for HTTPS
 SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
 CORS_ALLOW_CREDENTIALS = True  # Ensure cookies are sent
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -133,7 +132,7 @@ DATABASES = {
 }
 
 '''
-if  DEBUG:
+if DEBUG:
 
     DATABASES = {
         "default": {

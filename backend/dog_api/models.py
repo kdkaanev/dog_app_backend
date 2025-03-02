@@ -80,6 +80,7 @@ class DogPost(models.Model):
         on_delete=models.CASCADE,
         related_name='dog_posts',
     )
+
     @property
     def dog_post(self):
         return DogPost.objects.get(pk=self.pk).user
@@ -87,7 +88,6 @@ class DogPost(models.Model):
     @property
     def has_messages(self):
         return self.message_set.exists()
-
 
     def __str__(self):
         return f"{self.title.capitalize()}"
