@@ -132,8 +132,8 @@ DATABASES = {
 }
 
 '''
-if DEBUG:
 
+'''
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -144,8 +144,9 @@ if DEBUG:
             "PORT": "5432",
         }
     }
+    '''
 
-else:
+
     DATABASES = {
         "default": {
             'ENGINE': 'django.db.backends.postgresql',
