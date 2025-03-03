@@ -184,6 +184,7 @@ class CurrentUserView(APIView):
             )
 
 
+
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
