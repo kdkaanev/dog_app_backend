@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = bool(os.getenv("DEBUG", 0))
-DEBUG = False
+DEBUG = True
 
 # ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 ALLOWED_HOSTS = ['*']
@@ -84,7 +84,7 @@ CSRF_USE_SESSIONS = False
 '''
 CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = True  # Required for HTTPS
-
+SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
 CORS_ALLOW_CREDENTIALS = True  # Ensure cookies are sent
 
